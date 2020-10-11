@@ -24,12 +24,12 @@ PointnetImpl::PointnetImpl(int num_classes){
     fc_2 = register_module("fc_2", torch::nn::Linear(512, 256));
     last = register_module("last", torch::nn::Linear(256, num_classes));
 
-    bn_1 = register_module("bn_1", torch::nn::BatchNorm(64));
-    bn_2= register_module("bn_2", torch::nn::BatchNorm(64));
-    bn_3 = register_module("bn_3", torch::nn::BatchNorm(128));
-    bn_4 = register_module("bn_4", torch::nn::BatchNorm(1024));
-    bn_5 = register_module("bn_5", torch::nn::BatchNorm(512));
-    bn_6 = register_module("bn_6", torch::nn::BatchNorm(256));
+    bn_1 = register_module("bn_1", torch::nn::BatchNorm2d(64));
+    bn_2= register_module("bn_2", torch::nn::BatchNorm2d(64));
+    bn_3 = register_module("bn_3", torch::nn::BatchNorm2d(128));
+    bn_4 = register_module("bn_4", torch::nn::BatchNorm2d(1024));
+    bn_5 = register_module("bn_5", torch::nn::BatchNorm2d(512));
+    bn_6 = register_module("bn_6", torch::nn::BatchNorm2d(256));
 
 }
 
@@ -38,7 +38,7 @@ at::Tensor PointnetImpl::forward(torch::Tensor x){
     InputTransform input_transform (3);
     input_transform->to(torch::kCUDA);
     auto transform = input_transform->forward(x);
-    x = torch::matmul(transform,x);
+    x = torch::matmul(transform, x);
     x = torch::relu(bn_1->forward(conv_1->forward(x)));
     x = torch::relu(bn_2->forward(conv_2->forward(x)));
     FeatureTransform feature_transform(64);

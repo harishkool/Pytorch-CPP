@@ -22,12 +22,12 @@ class PointnetImpl : public torch::nn::Module{
         torch::nn::Linear fc_2{nullptr};
         torch::nn::Linear last{nullptr};
         
-        torch::nn::BatchNorm bn_1{nullptr};
-        torch::nn::BatchNorm bn_2{nullptr};
-        torch::nn::BatchNorm bn_3{nullptr};
-        torch::nn::BatchNorm bn_4{nullptr};
-        torch::nn::BatchNorm bn_5{nullptr};
-        torch::nn::BatchNorm bn_6{nullptr};
+        torch::nn::BatchNorm2d bn_1{nullptr};
+        torch::nn::BatchNorm2d bn_2{nullptr};
+        torch::nn::BatchNorm2d bn_3{nullptr};
+        torch::nn::BatchNorm2d bn_4{nullptr};
+        torch::nn::BatchNorm2d bn_5{nullptr};
+        torch::nn::BatchNorm2d bn_6{nullptr};
 
         torch::nn::Dropout dp_1{nullptr};
         torch::nn::Dropout dp_2{nullptr};
