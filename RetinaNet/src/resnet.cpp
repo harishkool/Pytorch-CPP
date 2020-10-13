@@ -71,14 +71,20 @@ ResNetImpl::ResNetImpl(std::string resnet_arch, std::string norm_type, std::vect
     conv_1 = register_module("conv_1", torch::nn::Conv2d(torch::nn::Conv2dOptions(input_channels, 64, 7).stride(2).padding(2).
                 bias(false)));
     maxpool_1 = register_module("maxpool1", torch::nn::MaxPool2d(torch::nn::MaxPool2dOptions({3, 3}).stride(2).padding(3)));
-    c1 = register_module("c1", get_layer(resnet_arch, 0, 64, 64));
-    c2 = register_module("c2", get_layer(resnet_arch, 1, 128, 128));
-    c3 = register_module("c3", get_layer(resnet_arch, 2, 256, 256));
-    c4 = register_module("c4", get_layer(resnet_arch, 3, 512, 512));
+    c2 = register_module("c1", get_layer(resnet_arch, 0, 64, 64));
+    c3 = register_module("c2", get_layer(resnet_arch, 1, 128, 128));
+    c4 = register_module("c3", get_layer(resnet_arch, 2, 256, 256));
+    c5 = register_module("c4", get_layer(resnet_arch, 3, 512, 512));
 
 }
-at::Tensor ResNetImpl::forward(torch::Tensor x){
-    
+auto ResNetImpl::forward(torch::Tensor x){
+    x = conv_1(x);
+    torch::Tensor c1_x = maxpool_1(x);
+    torch::Tensor c2_x = c1(x);
+    torch::Tensor c3_x = c2(x);
+    torch::Tensor c4_x = c3(x);
+    torch::Tensor c5_x = c4(x);
+    return std::make_tuple([c1_x, c2_x, c3_x, c4_x, c5_x]);
 }
 
 torch::nn::Sequential get_layer(std::string resnet_arch, int layer_num, int inplanes, int outplanes){

@@ -44,20 +44,19 @@ class ResNetImpl : public torch::nn::Module{
         ResNetImpl();
         ResNetImpl(std::string resnet_arch, std::string norm_type, std::vector<int> arch_layers,
             int input_channels, int groups, int width);
-        torch::Tensor forward(torch::Tensor x);
+        auto forward(torch::Tensor x);
     private:
         // All operations needed for various ResNet implementations
     torch::nn::Conv2d conv_1{nullptr};
     torch::nn::MaxPool2d maxpool_1{nullptr};
     torch::nn::BatchNorm2d batchnorm1{nullptr};
-    torch::nn::Sequential c1{nullptr};
     torch::nn::Sequential c2{nullptr};
     torch::nn::Sequential c3{nullptr};
     torch::nn::Sequential c4{nullptr};
-    std::tuple stages;
+    torch::nn::Sequential c5{nullptr};
 };
 
 
-TORCH_MODULE(ResNet)
+TORCH_MODULE(ResNet);
 
 #endif
