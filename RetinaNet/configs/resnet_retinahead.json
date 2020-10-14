@@ -1,0 +1,25 @@
+{
+"backbone":
+    {
+      "arch":"resnet50",
+      "levels":[3, 4, 5]
+    },
+"head":
+    {
+      "pyramid":"fpn",
+      "head_channels":128,
+      "num_convs":4,
+      "pyramid_levels":[3, 4, 5, 6, 7]
+    },
+"anchor_config":{
+      "aspect_ratios":[0.5, 1.0, 2.0],
+      "scales":[1.0, 1.5, 1.75],
+      "sizes":[16, 32, 64, 128, 256]
+    },
+"optimizer":"Adam",
+"epochs":20,
+"save":"~/Downloads/retinanet/",
+"initial_lr":0.0035,
+"max_lr":0.0001,
+"decay":"cosine"
+}
