@@ -45,6 +45,9 @@ class ResNetImpl : public torch::nn::Module{
         ResNetImpl(std::string resnet_arch, std::string norm_type, std::vector<int> arch_layers,
             int input_channels, int groups, int width);
         auto forward(torch::Tensor x);
+        torch::nn::Sequential make_layer_using_basic_block(int num, int inplanes, int outplanes);
+        torch::nn::Sequential make_layer_using_bottleneck_block(int num, int inplanes, int outplanes);
+        torch::nn::Sequential get_layer(std::string resnet_arch, int layer_num, int inplanes, int outplanes);
     private:
         // All operations needed for various ResNet implementations
     torch::nn::Conv2d conv_1{nullptr};

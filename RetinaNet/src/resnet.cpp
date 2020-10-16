@@ -80,14 +80,14 @@ ResNetImpl::ResNetImpl(std::string resnet_arch, std::string norm_type, std::vect
 auto ResNetImpl::forward(torch::Tensor x){
     x = conv_1(x);
     torch::Tensor c1_x = maxpool_1(x);
-    torch::Tensor c2_x = c1(x);
-    torch::Tensor c3_x = c2(x);
-    torch::Tensor c4_x = c3(x);
-    torch::Tensor c5_x = c4(x);
+    torch::Tensor c2_x = c2(x);
+    torch::Tensor c3_x = c3(x);
+    torch::Tensor c4_x = c4(x);
+    torch::Tensor c5_x = c5(x);
     return std::make_tuple([c1_x, c2_x, c3_x, c4_x, c5_x]);
 }
 
-torch::nn::Sequential get_layer(std::string resnet_arch, int layer_num, int inplanes, int outplanes){
+torch::nn::Sequential ResNetImpl::get_layer(std::string resnet_arch, int layer_num, int inplanes, int outplanes){
     std::unordered_map<std::string, std::vector<int>>arch_layer_nums;
     arch_layer_nums["resnet_18"] = std::vector<int>{2, 2, 2, 2};
     arch_layer_nums["resnet_34"] = std::vector<int>{3, 4, 6, 3};
@@ -102,7 +102,7 @@ torch::nn::Sequential get_layer(std::string resnet_arch, int layer_num, int inpl
 
 }
 
-torch::nn::Sequential make_layer_using_basic_block(int num, int inplanes, int outplanes){
+torch::nn::Sequential ResNetImpl::make_layer_using_basic_block(int num, int inplanes, int outplanes){
     torch::nn::Sequential layers;
     for(int i =0; i < num; i++){
         layers->push_back(Basicblock(inplanes, outplanes));
@@ -110,7 +110,7 @@ torch::nn::Sequential make_layer_using_basic_block(int num, int inplanes, int ou
 
 }
 
-torch::nn::Sequential make_layer_using_bottleneck_block(int num, int inplanes, int outplanes){
+torch::nn::Sequential ResNetImpl::make_layer_using_bottleneck_block(int num, int inplanes, int outplanes){
     torch::nn::Sequential layers;
     for(int i =0; i < num; i++){
         layers->push_back(Bottleneckblock(inplanes, outplanes));
