@@ -95,9 +95,9 @@ torch::nn::Sequential ResNetImpl::get_layer(std::string resnet_arch, int layer_n
     arch_layer_nums["resnet_101"] = std::vector<int>{3, 4, 23, 3};
     arch_layer_nums["resnet_151"] = std::vector<int>{3, 8, 36, 3};
     if(resnet_arch=="resnet_18" || resnet_arch=="resnet_34"){
-      return   this->make_layer_using_basic_block(arch_layer_nums[resnet_arch][layer_num], inplanes, outplanes);
+      return   make_layer_using_basic_block(arch_layer_nums[resnet_arch][layer_num], inplanes, outplanes);
     }else{
-       return this->make_layer_using_bottleneck_block(arch_layer_nums[resnet_arch][layer_num], inplanes, outplanes);
+       return make_layer_using_bottleneck_block(arch_layer_nums[resnet_arch][layer_num], inplanes, outplanes);
     }
 
 }
