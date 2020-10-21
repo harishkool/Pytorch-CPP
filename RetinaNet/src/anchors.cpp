@@ -8,6 +8,7 @@ Anchors::Anchors(std::vector<int> aspect_ratios, std::vector<int> anchor_scales,
     this->anchor_scales = anchor_scales;
     this->anchor_sizes = anchor_sizes;
     this->aspect_ratios = aspect_ratios;
+    this->feature_strides = feature_strides;
 
     for (int sz =0; sz < anchor_sizes.size(); sz++){
         std::vector<std::vector<int>> anchor_scale;
@@ -30,8 +31,23 @@ Anchors::Anchors(std::vector<int> aspect_ratios, std::vector<int> anchor_scales,
 
         }
 
-        anchors.insert(std::pair<int, std::vector<std::vector<int>>>(anchor_sizes[sz], anchor_scale));
+        anchors_per_cell.insert(std::pair<int, std::vector<std::vector<int>>>(anchor_sizes[sz], anchor_scale));
     }
+
+    std::vector<std::pair<int, int>> grid_sizes;
+    auto func = [input_size](int s){
+        return std::pair<int, int>(int(input_size.first/s), int(input_size.second/s));
+    };
+
+    for(auto s:feature_strides){
+        grid_sizes.push_back(std::pair<int, int>(int(input_size.first/s), int(input_size.second/s)));
+    }
+    // 512, 512 --> input size
+    // 2 ** level for level in pyramid_level --> [3, 4, 5, 6, 7]
+    // strides --> [8, 16, 32, 64, 128]
+    // anchor sizes --> [16, 32, 64, 128, 256]
+    
+
 }
 
 int Anchors::get_anchors_per_cell(){

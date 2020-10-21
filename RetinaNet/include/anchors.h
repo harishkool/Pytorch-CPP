@@ -17,8 +17,8 @@ class Anchors{
     std::vector<int> anchor_sizes;
     std::vector<int> anchor_scales;
     std::vector<int> aspect_ratios;
-    // std::vector<std::pair<int, std::vector<int>> > anchors; 
-    std::unordered_map<int, std::vector<std::vector<int>>> anchors;
+    std::unordered_map<int, std::vector<std::vector<int>>> anchors_per_cell;
+    std::vector<int> feature_strides;
     
 };
 
