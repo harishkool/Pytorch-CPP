@@ -39,11 +39,6 @@ std::pair<std::vector<std::string>, std::vector<int>> get_data(std::string folde
     std::vector<int>labels;
     struct dirent *entry;
     DIR *dir = opendir(folder.c_str());
-    // if (dir == NULL)
-    // {
-
-    //     return ;
-    // }
     // std::cout << "folder name is " << folder << std::endl;
     // while ((entry = readdir(dir)) != NULL)
     // {
