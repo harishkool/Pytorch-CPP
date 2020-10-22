@@ -11,8 +11,8 @@ int main(){
     // evaluation loop
     // get the model config from a json or yaml file
     std::vector<int> pyramid_levels {3, 4, 5, 6, 7};
-    int input_height = 512;
-    int input_width = 512;
+    int input_height = 800;
+    int input_width = 800;
     std::vector<int> strides;
 
     for(int i=0;i < pyramid_levels.size();i++){
