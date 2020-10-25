@@ -42,11 +42,38 @@ Anchors::Anchors(std::vector<int> aspect_ratios, std::vector<int> anchor_scales,
     for(auto s:feature_strides){
         grid_sizes.push_back(std::pair<int, int>(int(input_size.first/s), int(input_size.second/s)));
     }
+
     // 512, 512 --> input size
     // 2 ** level for level in pyramid_level --> [3, 4, 5, 6, 7]
     // strides --> [8, 16, 32, 64, 128]
     // anchor sizes --> [16, 32, 64, 128, 256]
+    // grid_sizes -->  [(512/8, 512/8),(512/16, 512/16),(512/32, 512/32),(512/64, 512/64),(512/128, 512/128)]
+    // anchors_per_cell --> [anchorssize (16)--> 9 anchorboxes, 32 --> 9 anchorboxes, .....]
     
+    float anchor_offset = 0.5;
+    
+    for(int sz=0; sz<grid_sizes.size(); sz++){
+        int grid_height = grid_sizes[sz].first;
+        int grid_width = grid_sizes[sz].second;
+        torch::Tensor shifts_x = torch::arange(anchor_offset * feature_strides[sz],
+            grid_width*feature_strides[sz], feature_strides[sz], 
+                torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCPU));
+
+        torch::Tensor shifts_y = torch::arange(anchor_offset * feature_strides[sz],
+            grid_height*feature_strides[sz], feature_strides[sz], 
+                torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCPU));
+        
+        std::vector<torch::Tensor> shifts_v{shifts_y, shifts_x};
+        torch::TensorList tensor_lst = shifts_v;
+        shifts_v = torch::meshgrid(tensor_lst);
+        std::vector<torch::Tensor> shifts_x_y{shifts_v[1], shifts_v[0], shifts_v[1], shifts_v[0]};
+        tensor_lst = shifts_x_y;
+        torch::Tensor shifts = torch::stack(tensor_lst).view({-1 ,1, 4});
+        torch::Tensor base_anchor = torch::from_blob(anchors_per_cell[anchor_sizes[sz]].data(), 
+                {int(anchors_per_cell.size())}).view({-1 ,1, 4});
+        final_anchors.push_back(torch::add(shifts, base_anchor));
+        
+    }
 
 }
 
