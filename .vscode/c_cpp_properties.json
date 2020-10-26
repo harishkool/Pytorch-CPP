@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/home/nagaharish/Downloads/libtorch-cxx11-abi-shared-with-deps-1.6.0+cpu/libtorch/include/torch/csrc/api/include/",
-                "/home/nagaharish/Downloads/libtorch-cxx11-abi-shared-with-deps-1.6.0+cpu/libtorch/include/"
+                "/home/nagaharish/Downloads/libtorch-cxx11-abi-shared-with-deps-1.6.0+cpu/libtorch/include/",
+                "/home/nagaharish/Downloads/jsoncpp/include/json"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc-7",

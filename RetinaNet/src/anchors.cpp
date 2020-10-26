@@ -56,11 +56,11 @@ Anchors::Anchors(std::vector<int> aspect_ratios, std::vector<int> anchor_scales,
         int grid_height = grid_sizes[sz].first;
         int grid_width = grid_sizes[sz].second;
         torch::Tensor shifts_x = torch::arange(anchor_offset * feature_strides[sz],
-            grid_width*feature_strides[sz], feature_strides[sz], 
+            grid_width * feature_strides[sz], feature_strides[sz], 
                 torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCPU));
 
         torch::Tensor shifts_y = torch::arange(anchor_offset * feature_strides[sz],
-            grid_height*feature_strides[sz], feature_strides[sz], 
+            grid_height * feature_strides[sz], feature_strides[sz], 
                 torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCPU));
         
         std::vector<torch::Tensor> shifts_v{shifts_y, shifts_x};
@@ -79,4 +79,8 @@ Anchors::Anchors(std::vector<int> aspect_ratios, std::vector<int> anchor_scales,
 
 int Anchors::get_anchors_per_cell(){
     return anchor_scales.size() * aspect_ratios.size();
+}
+
+std::vector<torch::Tensor> Anchors::get_all_anchors(){
+    return final_anchors;
 }

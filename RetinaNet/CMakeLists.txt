@@ -14,12 +14,13 @@ set(HEADERS include/train.h
 )
 
 set(EXECUTABLE_NAME pointnet)
-find_package(HighFive REQUIRED)
 find_package(Torch REQUIRED)
+find_package(jsoncpp CONFIG REQUIRED)
+target_link_libraries(train PRIVATE jsoncpp_object jsoncpp_static)
+
 add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${EXECUTABLE_NAME} PRIVATE include)
 target_link_libraries(${EXECUTABLE_NAME} ${TORCH_LIBRARIES})
-target_link_libraries(${EXECUTABLE_NAME}  HighFive)
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES
   CXX_STANDARD 11
   CXX_STANDARD_REQUIRED YES
