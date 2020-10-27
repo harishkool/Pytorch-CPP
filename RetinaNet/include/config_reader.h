@@ -11,6 +11,10 @@ namespace config{
     class ConfigReader{
         public:
             ConfigReader(const std::string config_path);
+        private:
+            struct backbone {
+                std::string backbone_arch;
+            };
     };
 
 
