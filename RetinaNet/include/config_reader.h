@@ -9,16 +9,43 @@
 namespace config{
 
     class ConfigReader{
+
+        private:
+            struct Backbone final{
+                std::string backbone_arch;
+                std::vector<int> levels;
+            };
+
+            struct Head final{
+                std::string pyramid;
+                int num_convs;
+                int head_channels;
+                std::vector<int> pyramid_levels;
+            };
+
+            struct AnchorConfig final{
+                std::vector<int> anchor_sizes;
+                std::vector<float> aspect_ratios;
+                std::vector<int> scales;
+            };
+
+            struct TrainingParameters final{
+                std::string optimizer;
+                int epochs;
+                std::string save_dir;
+                float initial_lr;
+                float max_lr;
+                std::string lr_decay;
+            };
+
         public:
             ConfigReader(const std::string config_path);
-        private:
-            struct backbone {
-                std::string backbone_arch;
-            };
+            Backbone backbone;
+            Head head;
+            AnchorConfig anchor_config;
+            TrainingParameters training_param;
+            virtual ~ConfigReader();
     };
-
-
-
 
 
 
