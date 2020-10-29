@@ -24,7 +24,7 @@ namespace config{
             };
 
             struct AnchorConfig final{
-                std::vector<int> anchor_sizes;
+                std::vector<int> sizes;
                 std::vector<float> aspect_ratios;
                 std::vector<int> scales;
             };

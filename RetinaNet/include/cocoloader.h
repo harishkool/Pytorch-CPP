@@ -9,6 +9,7 @@
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
+#include "json.h"
 
 struct CocoCategory {
   uint32_t id{0};
@@ -52,7 +53,7 @@ struct CocoAnnotation {
     }
   }
   void push_segm_coord(double v) {
-    segmentation.back().push_back(static_cast<int32_t>(v));
+      .back().push_back(static_cast<int32_t>(v));
   }
 };
 
@@ -71,13 +72,12 @@ struct ImageDesc {
   std::vector<int32_t> classes;
 };
 
-class CocoLoader {
+class CocoLoader : public torch::data::Dataset<CocoLoader>{
  public:
   explicit CocoLoader(const std::string& images_folder,
                       const std::string& ann_file);
-  void LoadData(const std::vector<std::string>& coco_classes,
-                const std::vector<uint32_t>& keep_classes = {},
-                float keep_aspect = -1);
+  void LoadData(Json::Value data_root);
+
   void AddImage(CocoImage image);
   void AddAnnotation(CocoAnnotation annotation);
   void AddCategory(CocoCategory category);

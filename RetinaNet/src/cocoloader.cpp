@@ -1,15 +1,9 @@
-#include "cocoloader.h"
-
-#include "imageutils.h"
-
-#include <rapidjson/error/en.h>
-#include <rapidjson/filereadstream.h>
-#include <rapidjson/reader.h>
-
+#include <iostream>
+#include "json.h"
 #include <cstdlib>
 #include <experimental/filesystem>
-#include <iostream>
 #include <string>
+#include "cocoloader.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -21,6 +15,13 @@ CocoLoader::CocoLoader(const std::string& images_folder,
   annotations_file_ = fs::path(ann_file);
   if (!fs::exists(annotations_file_))
     throw std::runtime_error(annotations_file_ + " file missed");
+      
+  Json::Value coco_json;
+  std::ifstream config_doc(config_filepath, std::ifstream::binary);
+  config_doc >> coco_json;
+  config_doc.close();
+  this->LoadData(coco_json);
+  
 }
 
 struct CocoHandler
@@ -80,6 +81,7 @@ struct CocoHandler
     }
     return true;
   }
+
   bool StartObject() {
     if (image_array_) {
       image_object_ = true;
@@ -93,10 +95,12 @@ struct CocoHandler
     }
     return true;
   }
+
   bool Key(const char* str, rapidjson::SizeType length, bool /*copy*/) {
     key_ = std::string(str, length);
     return true;
   }
+
   bool EndObject(rapidjson::SizeType /*memberCount*/) {
     if (image_array_ && image_object_) {
       coco_->AddImage(image_);
@@ -112,6 +116,7 @@ struct CocoHandler
     key_.clear();
     return true;
   }
+
   bool StartArray() {
     if (key_ == "images") {
       image_array_ = true;
@@ -138,6 +143,7 @@ struct CocoHandler
     }
     return true;
   }
+
   bool EndArray(rapidjson::SizeType /*elementCount*/) {
     // handle parent array
     if (annotation_object_ && segmentation_array_ &&
@@ -174,9 +180,7 @@ struct CocoHandler
   CocoLoader* coco_ = nullptr;
 };
 
-void CocoLoader::LoadData(const std::vector<std::string>& coco_classes,
-                          const std::vector<uint32_t>& keep_classes,
-                          float keep_aspect) {
+void CocoLoader::LoadData(const Json::Value coco_root) {
   if (!images_.empty()) {
     std::cerr << "Dataset " << images_folder_ << " already loaded\n";
     return;
@@ -219,7 +223,7 @@ void CocoLoader::LoadData(const std::vector<std::string>& coco_classes,
       auto pos = std::distance(coco_classes.begin(), i);
       cat_ind_to_class_ind_.insert({cat.second.id, static_cast<uint32_t>(pos)});
     }
-    // filter - leave images with required aspect ration only
+    // filter - leave images with required aspect ratio only
     if (keep_aspect > 0) {
       images_to_remove.clear();
       for (auto& img : images_) {
